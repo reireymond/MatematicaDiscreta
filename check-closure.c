@@ -11,15 +11,21 @@
  * 2. Gabriel Mendonça de Oliveira - Matrícula: 0117251
  * 3. Felipe de Castro Leal Ribeiro - Matrícula: 0117037
  * 4. Sofia Maria Jesus Leal - Matrícula: 0120376
+ *
+ *
+ * Instruções de Compilação (conforme especificado):
+ * $ gcc -lm check-closure.c -o check-closure.bin
+ *
+ * Instruções de Execução:
+ * $ ./check-closure.bin <arquivo-entrada> <preâmbulo-saída>
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-/* Variáveis Globais para a Matriz e Tamanho */
-int **adj;  // Matriz de adjacência alocada dinamicamente
-int n;      // Número de nós (elementos do conjunto)
+int **adj;
+int n;
 
 /* Protótipos das Funções (assinaturas) */
 void lerArquivo(char *nomeArquivo){
@@ -28,9 +34,8 @@ void lerArquivo(char *nomeArquivo){
         printf("Erro ao abrir o arquivo!/n");
         exit(1);
 
-
-        
     }
+    
      
 };
 int verificaReflexiva();
