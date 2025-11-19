@@ -13,7 +13,7 @@
  * 4. Sofia Maria Jesus Leal - Matrícula: 0120376
  *
  *
- * Instruções de Compilação (conforme especificado):
+ * Instruções de Compilação:
  * $ gcc -lm check-closure.c -o check-closure.bin
  *
  * Instruções de Execução:
@@ -30,14 +30,50 @@ int n;
 /* Protótipos das Funções (assinaturas) */
 void lerArquivo(char *nomeArquivo){
     FILE *f = fopen(nomeArquivo, "r");
-    if(f==NULL){
-        printf("Erro ao abrir o arquivo!/n");
+    if(f == NULL){
+        printf("Erro ao abrir o arquivo!\n");
         exit(1);
-
     }
-    
-     
-};
+
+    char buffer[100]; // Buffer para ler a linha inteira
+    char comando;     // Para ler 'n', 'r' ou 'f'
+    int u, v;         // Para ler os vértices (origem -> destino)
+
+    while(fgets(buffer, 100, f) != NULL) {
+        // Lê o primeiro caractere da linha para saber o tipo
+        sscanf(buffer, "%c", &comando);
+
+        if (comando == 'n') {
+            // Lê o tamanho do grafo (N)
+            sscanf(buffer, "%*c %d", &n);
+
+            // --- APLICAÇÃO DO CONCEITO BINÁRIO (PARTE 1: ZEROS) ---
+            // Alocamos (n+1) linhas. Usamos calloc para garantir que tudo seja 0.
+            adj = (int**) calloc(n + 1, sizeof(int*));
+            
+            for(int i = 1; i <= n; i++) {
+                // Para cada linha, alocamos (n+1) colunas, todas inicializadas com 0.
+                adj[i] = (int*) calloc(n + 1, sizeof(int));
+            }
+            // Agora temos uma matriz NxN cheia de zeros (falsos).
+
+        } else if (comando == 'r') {
+            // Lê a relação "u -> v"
+            sscanf(buffer, "%*c %d %d", &u, &v);
+
+            // --- APLICAÇÃO DO CONCEITO BINÁRIO (PARTE 2: UMS) ---
+            // Se existe a relação no arquivo, marcamos como 1 (verdadeiro)
+            if(u <= n && v <= n) {
+                adj[u][v] = 1; 
+            }
+            
+        } else if (comando == 'f') {
+            // Fim do arquivo
+            break;
+        }
+    }
+    fclose(f);
+}
 int verificaReflexiva();
 int verificaSimetrica();
 int verificaTransitiva();
