@@ -22,7 +22,10 @@ int **adj;  // Matriz de adjacência alocada dinamicamente
 int n;      // Número de nós (elementos do conjunto)
 
 /* Protótipos das Funções (assinaturas) */
-void lerArquivo(char *nomeArquivo);
+void lerArquivo(char *nomeArquivo){
+    FILE *f = fopen(nomeArquivo, "r");
+    
+};
 int verificaReflexiva();
 int verificaSimetrica();
 int verificaTransitiva();
@@ -53,6 +56,8 @@ int main(int argc, char **argv){
     StrEntrada = argv[1];
     StrSaida = argv[2];
     /* Restante do código */
+
+    lerArquivo(StrEntrada);
     /*....*/
     /* Encerra a aplicacao */
     exit(0);
