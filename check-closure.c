@@ -12,12 +12,6 @@
  * 3. Felipe de Castro Leal Ribeiro - Matrícula: 0117037
  * 4. Sofia Maria Jesus Leal - Matrícula: 0120376
  *
- *
- * Instruções de Compilação:
- * $ gcc -lm check-closure.c -o check-closure.bin
- *
- * Instruções de Execução:
- * $ ./check-closure.bin <arquivo-entrada> <preâmbulo-saída>
  */
 
 #include <stdlib.h>
