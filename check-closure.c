@@ -24,7 +24,12 @@ int n;      // Número de nós (elementos do conjunto)
 /* Protótipos das Funções (assinaturas) */
 void lerArquivo(char *nomeArquivo){
     FILE *f = fopen(nomeArquivo, "r");
-    
+    if(f==NULL){
+        printf("Erro ao abrir o arquivo!/n");
+        exit(1);
+
+    }
+     
 };
 int verificaReflexiva();
 int verificaSimetrica();
