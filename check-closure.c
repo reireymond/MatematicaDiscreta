@@ -13,6 +13,26 @@
  * 4. Sofia Maria Jesus Leal - Matrícula: 0120376
  */
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+
+int main(int argc, char **argv)
+{
+char* StrEntrada;
+char* StrSaida;
+/* Testa se a quantidade de parâmetros informada esta correta */]
+if(argc != 3)
+{
+print("\nErro de Sintaxe\n);
+print("Usar: ./check-closure.bin <entrada> <saida>\n\n");
+exit(1);
+}
+/* Obtem os parametros informados */
+StrEntrada = argv[1];
+StrSaida = argv[2];
+/* Restante do código */
+....
+/* Encerra a aplicacao */
+exit(0);
+}
