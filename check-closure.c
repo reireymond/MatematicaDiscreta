@@ -17,11 +17,9 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Variáveis Globais para a Matriz e Tamanho */
-int **adj;  // Matriz de adjacência alocada dinamicamente
-int n;      // Número de nós (elementos do conjunto)
+int **adj;
+int n;
 
-/* Protótipos das Funções (assinaturas) */
 void lerArquivo(char *nomeArquivo);
 int verificaReflexiva();
 int verificaSimetrica();
