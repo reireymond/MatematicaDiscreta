@@ -13,6 +13,20 @@
  * 4. Sofia Maria Jesus Leal - Matrícula: 0120376
  */
 
+/* Variáveis Globais para a Matriz e Tamanho */
+int **adj;  // Matriz de adjacência alocada dinamicamente
+int n;      // Número de nós (elementos do conjunto)
+
+/* Protótipos das Funções (assinaturas) */
+void lerArquivo(char *nomeArquivo);
+int verificaReflexiva();
+int verificaSimetrica();
+int verificaTransitiva();
+void calculaFechoReflexivo(char *nomeSaida);
+void calculaFechoSimetrico(char *nomeSaida);
+void calculaFechoTransitivo(char *nomeSaida);
+void liberaMemoria();
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
