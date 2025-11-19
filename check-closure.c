@@ -28,6 +28,8 @@ void lerArquivo(char *nomeArquivo){
         printf("Erro ao abrir o arquivo!/n");
         exit(1);
 
+
+        
     }
      
 };
