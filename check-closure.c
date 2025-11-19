@@ -20,7 +20,11 @@
 int **adj;
 int n;
 
-void lerArquivo(char *nomeArquivo);
+/* Protótipos das Funções (assinaturas) */
+void lerArquivo(char *nomeArquivo){
+    FILE *f = fopen(nomeArquivo, "r");
+    //
+};
 int verificaReflexiva();
 int verificaSimetrica();
 int verificaTransitiva();
@@ -51,6 +55,8 @@ int main(int argc, char **argv){
     StrEntrada = argv[1];
     StrSaida = argv[2];
     /* Restante do código */
+
+    lerArquivo(StrEntrada);
     /*....*/
     /* Encerra a aplicacao */
     exit(0);
