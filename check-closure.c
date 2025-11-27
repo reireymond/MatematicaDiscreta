@@ -65,6 +65,14 @@ void lerArquivo(char *nomeArquivo, int **matriz, int n)
         }
         else if (comando == 'f')
         {
+            //Imprime para verificar a matriz gerada
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= n; j++)
+                {
+                    printf("%d", &matriz[i][j]);
+                }
+            }
             break;
         }
         else
@@ -74,7 +82,6 @@ void lerArquivo(char *nomeArquivo, int **matriz, int n)
     }
     fclose(f);
 }
-void escreverArquivo();
 int verificaReflexiva();
 int verificaSimetrica();
 int verificaTransitiva();
