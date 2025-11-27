@@ -10,7 +10,7 @@
  * 1. Kaua Teixeira Nascimento - Matrícula: 0117182
  * 2. Gabriel Mendonça de Oliveira - Matrícula: 0117251
  * 3. Felipe de Castro Leal Ribeiro - Matrícula: 0117037
- * 4. Sofia Maria Jesus Leal - Matrícula: 0120376
+ * 4. Sofia Maria Jesus eeLeal - Matrícula: 0120376
  */
 
 #include <stdlib.h>
