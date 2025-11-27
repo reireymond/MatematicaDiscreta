@@ -17,111 +17,83 @@
 #include <stdio.h>
 #include <string.h>
 
-void lerArquivo(char *nomeArquivo, int **matriz, int n)
+void lerArquivo(char *nomeArquivo, int ***matriz, int *n)
 {
     FILE *f = fopen(nomeArquivo, "r");
-    if (f == NULL)
+    if (!f)
     {
         printf("Erro ao abrir o arquivo!\n");
         exit(1);
     }
 
-    char linha[100]; // linha inteira
-    char comando;    // Para ler 'n', 'r' ou 'f'
-    int u, v;        // Para ler os vértices (origem -> destino)
+    char linha[100];
+    char comando;
+    int u, v;
 
     while (fgets(linha, 100, f) != NULL)
     {
-        // Lê o primeiro caractere da linha para saber o tipo
         sscanf(linha, "%c", &comando);
 
         if (comando == 'n')
         {
-            // Lê o tamanho da matriz (N)
-            sscanf(linha, "%*c %d", &n);
+            // lê N
+            sscanf(linha, "%*c %d", n);
 
-            // inicializa as 'n' linhas da matriz com 0
-            matriz = (int **)calloc(n + 1, sizeof(int *));
-
-            // inicializa as 'n' colunas da matriz com 0
-            for (int i = 1; i <= n; i++)
-            {
-                matriz[i] = (int *)calloc(n + 1, sizeof(int));
-            }
-
-            if (comando == 'r')
-            {
-                // Lê o tamanho da matriz (N)
-                sscanf(linha, "%*c %d", &n);
-            }
+            // aloca a matriz
+            *matriz = calloc((*n) + 1, sizeof(int *));
+            for (int i = 1; i <= *n; i++)
+                (*matriz)[i] = calloc((*n) + 1, sizeof(int));
         }
         else if (comando == 'r')
         {
             sscanf(linha, "%*c %d %d", &u, &v);
-
-            if(u <= n && v <= n) {
-                matriz[u][v] = 1; 
-            }
+            if (u <= *n && v <= *n)
+                (*matriz)[u][v] = 1;
         }
         else if (comando == 'f')
         {
-            //Imprime para verificar a matriz gerada
-            for (int i = 1; i <= n; i++)
+            // imprime
+            for (int i = 1; i <= *n; i++)
             {
-                for (int j = 1; j <= n; j++)
-                {
-                    printf("%d", &matriz[i][j]);
-                }
+                for (int j = 1; j <= *n; j++)
+                    printf("%d ", (*matriz)[i][j]);
+                printf("\n");
             }
             break;
         }
-        else
-        {
-            break;
-        }
     }
+
     fclose(f);
 }
-int verificaReflexiva();
-int verificaSimetrica();
-int verificaTransitiva();
-void calculaFechoReflexivo(char *nomeSaida);
-void calculaFechoSimetrico(char *nomeSaida);
-void calculaFechoTransitivo(char *nomeSaida);
-/*void liberaMemoria()
-{
-    if (adj != NULL)
-    {
-        int i;
-        for (i = 0; i < n; i++)
-        {
-            free(adj[1]);
-        }
-        free(adj);
-        adj = NULL;
-    }
-}*/
+
+int verificaReflexiva(int ***matriz, int *n);
+int verificaSimetrica(int ***matriz, int *n);
+int verificaTransitiva(int ***matriz, int *n);
+void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida);
+void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida);
+void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida);
 
 int main(int argc, char **argv)
 {
     char *StrEntrada;
     char *StrSaida;
-    /* Testa se a quantidade de parâmetros informada esta correta */
+
+    //Testa se a quantidade de parâmetros informada esta correta */
     if (argc != 3)
     {
         printf("\nErro de Sintaxe\n");
         printf("Usar: ./check-closure.bin <entrada> <saida>\n\n");
         exit(1);
     }
-    /* Obtem os parametros informados */
+
+    //Obtem os parametros argv para receber o nome dos arquivos
     StrEntrada = argv[1];
     StrSaida = argv[2];
-    /* Restante do código */
 
     int **matriz;
     int n = 1;
-    lerArquivo(StrEntrada, matriz, &n);
-    /*....*/
-    /* Encerra a aplicacao */
+
+    lerArquivo(StrEntrada, &matriz, &n);
+
     exit(0);
 }
