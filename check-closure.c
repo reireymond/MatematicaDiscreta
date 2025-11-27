@@ -17,78 +17,91 @@
 #include <stdio.h>
 #include <string.h>
 
-int **adj;
-int n;
-
-/* Protótipos das Funções (assinaturas) */
-void lerArquivo(char *nomeArquivo){
+void lerArquivo(char *nomeArquivo, int **matriz, int n)
+{
     FILE *f = fopen(nomeArquivo, "r");
-    if(f == NULL){
+    if (f == NULL)
+    {
         printf("Erro ao abrir o arquivo!\n");
         exit(1);
     }
 
-    char buffer[100]; // Buffer para ler a linha inteira
-    char comando;     // Para ler 'n', 'r' ou 'f'
-    int u, v;         // Para ler os vértices (origem -> destino)
+    char linha[100]; // linha inteira
+    char comando;    // Para ler 'n', 'r' ou 'f'
+    int u, v;        // Para ler os vértices (origem -> destino)
 
-    while(fgets(buffer, 100, f) != NULL) {
+    while (fgets(linha, 100, f) != NULL)
+    {
         // Lê o primeiro caractere da linha para saber o tipo
-        sscanf(buffer, "%c", &comando);
+        sscanf(linha, "%c", &comando);
 
-        if (comando == 'n') {
-            // Lê o tamanho do grafo (N)
-            sscanf(buffer, "%*c %d", &n);
+        if (comando == 'n')
+        {
+            // Lê o tamanho da matriz (N)
+            sscanf(linha, "%*c %d", &n);
 
-            // --- APLICAÇÃO DO CONCEITO BINÁRIO (PARTE 1: ZEROS) ---
-            // Alocamos (n+1) linhas. Usamos calloc para garantir que tudo seja 0.
-            adj = (int**) calloc(n + 1, sizeof(int*));
-            
-            for(int i = 1; i <= n; i++) {
-                // Para cada linha, alocamos (n+1) colunas, todas inicializadas com 0.
-                adj[i] = (int*) calloc(n + 1, sizeof(int));
+            // inicializa as 'n' linhas da matriz com 0
+            matriz = (int **)calloc(n + 1, sizeof(int *));
+
+            // inicializa as 'n' colunas da matriz com 0
+            for (int i = 1; i <= n; i++)
+            {
+                matriz[i] = (int *)calloc(n + 1, sizeof(int));
             }
-            // Agora temos uma matriz NxN cheia de zeros (falsos).
 
-        } else if (comando == 'r') {
-            // Lê a relação "u -> v"
-            sscanf(buffer, "%*c %d %d", &u, &v);
+            if (comando == 'r')
+            {
+                // Lê o tamanho da matriz (N)
+                sscanf(linha, "%*c %d", &n);
+            }
+        }
+        else if (comando == 'r')
+        {
+            sscanf(linha, "%*c %d %d", &u, &v);
 
-            // --- APLICAÇÃO DO CONCEITO BINÁRIO (PARTE 2: UMS) ---
-            // Se existe a relação no arquivo, marcamos como 1 (verdadeiro)
             if(u <= n && v <= n) {
-                adj[u][v] = 1; 
+                matriz[u][v] = 1; 
             }
-            
-        } else if (comando == 'f') {
-            // Fim do arquivo
+        }
+        else if (comando == 'f')
+        {
+            break;
+        }
+        else
+        {
             break;
         }
     }
     fclose(f);
 }
+void escreverArquivo();
 int verificaReflexiva();
 int verificaSimetrica();
 int verificaTransitiva();
 void calculaFechoReflexivo(char *nomeSaida);
 void calculaFechoSimetrico(char *nomeSaida);
 void calculaFechoTransitivo(char *nomeSaida);
-void liberaMemoria(){
-    if (adj != NULL){
+/*void liberaMemoria()
+{
+    if (adj != NULL)
+    {
         int i;
-        for (i=0; i<n; i++){
+        for (i = 0; i < n; i++)
+        {
             free(adj[1]);
         }
         free(adj);
         adj = NULL;
     }
-}
+}*/
 
-int main(int argc, char **argv){
-    char* StrEntrada;
-    char* StrSaida;
+int main(int argc, char **argv)
+{
+    char *StrEntrada;
+    char *StrSaida;
     /* Testa se a quantidade de parâmetros informada esta correta */
-    if(argc != 3){
+    if (argc != 3)
+    {
         printf("\nErro de Sintaxe\n");
         printf("Usar: ./check-closure.bin <entrada> <saida>\n\n");
         exit(1);
@@ -98,7 +111,9 @@ int main(int argc, char **argv){
     StrSaida = argv[2];
     /* Restante do código */
 
-    lerArquivo(StrEntrada);
+    int **matriz;
+    int n = 1;
+    lerArquivo(StrEntrada, matriz, &n);
     /*....*/
     /* Encerra a aplicacao */
     exit(0);
