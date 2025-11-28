@@ -73,46 +73,38 @@ void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida);
 void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida);
 void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida);
 
-int verificaReflexiva(int ***matriz, int *n){
-
-     for (int i = 1; i < *n; i++)
-   {
-    if ((*matriz)[i][i]==1)
+int verificaReflexiva(int ***matriz, int *n)
+{
+    for (int i = 1; i <= *n; i++)
     {
-         printf("\n Reflexiva:Sim");
-         return 0;
-         
-    } else {
-              printf("\n Reflexiva:Nao");
-         return 0;
-
+        if ((*matriz)[i][i] != 1)
+        {
+            printf("\nReflexiva: Nao");
+            return 0;
+        }
     }
-    
-   } 
 
+    printf("\nReflexiva: Sim");
+    return 1;
 }
 
-int verificaSimetrica(int ***matriz, int *n){
 
-   for (int i = 1; i < *n; i++)
-   {
-    for (int j= 1; j < *n; j++)
+int verificaSimetrica(int ***matriz, int *n)
+{
+    for (int i = 1; i <= *n; i++)
     {
-        
-    if ((*matriz)[i][j]!=(*matriz)[j][i])
-    {
-         printf("\nSimetrica:Nao");
-         return 0;
-         
-    } else {
-              printf("\n Simetrica:Sim");
-         return 0;
+        for (int j = 1; j <= *n; j++)
+        {
+            if ((*matriz)[i][j] != (*matriz)[j][i])
+            {
+                printf("\nSimetrica: Nao");
+                return 0;
+            }
+        }
+    }
 
-    }
-   
-    }
-    
-   }     
+    printf("\nSimetrica: Sim");
+    return 1;
 }
 
 
