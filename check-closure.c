@@ -73,6 +73,50 @@ void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida);
 void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida);
 void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida);
 
+int verificaReflexiva(int ***matriz, int *n){
+
+     for (int i = 1; i < *n; i++)
+   {
+    if ((*matriz)[i][i]==1)
+    {
+         printf("\n Reflexiva:Sim");
+         return 0;
+         
+    } else {
+              printf("\n Reflexiva:Nao");
+         return 0;
+
+    }
+    
+   } 
+
+}
+
+int verificaSimetrica(int ***matriz, int *n){
+
+   for (int i = 1; i < *n; i++)
+   {
+    for (int j= 1; j < *n; j++)
+    {
+        
+    if ((*matriz)[i][j]!=(*matriz)[j][i])
+    {
+         printf("\nSimetrica:Nao");
+         return 0;
+         
+    } else {
+              printf("\n Simetrica:Sim");
+         return 0;
+
+    }
+   
+    }
+    
+   }     
+}
+
+
+
 int main(int argc, char **argv)
 {
     char *StrEntrada;
@@ -94,6 +138,9 @@ int main(int argc, char **argv)
     int n = 1;
 
     lerArquivo(StrEntrada, &matriz, &n);
+       verificaSimetrica(&matriz, &n);
+       verificaReflexiva(&matriz, &n);
+
 
     exit(0);
 }
