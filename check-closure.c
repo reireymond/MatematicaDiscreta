@@ -1,17 +1,17 @@
 /*
- * INSTITUTO FEDERAL DE MINAS GERAIS - CAMPUS FORMIGA
- * Bacharelado em Ciência da Computação
- * Disciplina: Matemática Discreta
- * Professor: Diego Mello da Silva
- *
- * Trabalho Prático: Verificação de Propriedades e Cálculo de Fechos
- *
- * Integrantes do Grupo:
- * 1. Kaua Teixeira Nascimento - Matrícula: 0117182
- * 2. Gabriel Mendonça de Oliveira - Matrícula: 0117251
- * 3. Felipe de Castro Leal Ribeiro - Matrícula: 0117037
- * 4. Sofia Maria Jesus eeLeal - Matrícula: 0120376
- */
+ INSTITUTO FEDERAL DE MINAS GERAIS - CAMPUS FORMIGA
+ Bacharelado em Ciência da Computação
+ Disciplina: Matemática Discreta
+ Professor: Diego Mello da Silva
+
+ Trabalho Prático: Verificação de Propriedades e Cálculo de Fechos
+
+ Integrantes do Grupo:
+ 1. Kaua Teixeira Nascimento - Matrícula: 0117182
+ 2. Gabriel Mendonça de Oliveira - Matrícula: 0117251
+ 3. Felipe de Castro Leal Ribeiro - Matrícula: 0117037
+ 4. Sofia Maria Jesus eeLeal - Matrícula: 0120376
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -75,7 +75,7 @@ void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida);
 
 int verificaReflexiva(int ***matriz, int *n)
 {
-    for (int i = 0; i < *n; i++)
+    for (int i = 1; i < *n; i++)
     {
         if ((*matriz)[i][i] != 1)
         {
@@ -89,7 +89,7 @@ int verificaReflexiva(int ***matriz, int *n)
 }
 int verificaSimetrica(int ***matriz, int *n)
 {
-    for (int i = 0; i < *n; i++)
+    for (int i = 1; i < *n; i++)
     {
         for (int j = 1; j <= *n; j++)
         {
@@ -97,35 +97,34 @@ int verificaSimetrica(int ***matriz, int *n)
             {
                 printf("\nSimetrica:Nao");
                 return 0;
-           }
+            }
         }
     }
     printf("\nSimetrica:Sim");
     return 1;
 }
-int verificaTransitiva(int ***matriz, int *n){
-    for (int i = 0; i < *n; i++)
+int verificaTransitiva(int ***matriz, int *n)
+{
+    for (int i = 1; i < *n; i++)
     {
         for (int j = 1; j <= *n; j++)
         {
-            if ((*matriz)[i][j] == 1){
-            
-            for (int k = 0; k <= *n; k++)
+            if ((*matriz)[i][j] == 1)
             {
-                if ((*matriz)[j][k]==1 && (*matriz)[i][k]==0)
+
+                for (int k = 0; k <= *n; k++)
                 {
-                    printf("\nTransitiva:Nao");
-                    return 0;
+                    if ((*matriz)[j][k] == 1 && (*matriz)[i][k] == 0)
+                    {
+                        printf("\nTransitiva:Nao");
+                        return 0;
+                    }
                 }
-                
             }
-        }
-            
         }
     }
     printf("\nTransitiva:Sim");
     return 1;
-
 }
 
 int main(int argc, char **argv)
@@ -133,7 +132,7 @@ int main(int argc, char **argv)
     char *StrEntrada;
     char *StrSaida;
 
-    //Testa se a quantidade de parâmetros informada esta correta */
+    // Testa se a quantidade de parâmetros informada esta correta */
     if (argc != 3)
     {
         printf("\nErro de Sintaxe\n");
@@ -141,7 +140,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    //Obtem os parametros argv para receber o nome dos arquivos
+    // Obtem os parametros argv para receber o nome dos arquivos
     StrEntrada = argv[1];
     StrSaida = argv[2];
 
@@ -149,10 +148,9 @@ int main(int argc, char **argv)
     int n = 1;
 
     lerArquivo(StrEntrada, &matriz, &n);
-       verificaSimetrica(&matriz, &n);
-       verificaReflexiva(&matriz, &n);
-       verificaTransitiva(&matriz, &n);
-
+    verificaSimetrica(&matriz, &n);
+    verificaReflexiva(&matriz, &n);
+    verificaTransitiva(&matriz, &n);
 
     exit(0);
 }
