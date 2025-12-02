@@ -156,3 +156,36 @@ int main(int argc, char **argv)
 
     exit(0);
 }
+void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida){
+    int encontrado = 0;//contador para verificar se ja e reflexiva
+    int **matrizAux; //matriz auxiliar para o fecho reflexivo
+    *matrizAux = calloc((*n) + 1, sizeof(int *));
+            for (int i = 1; i <= *n; i++)
+                (*matriz)[i] = calloc((*n) + 1, sizeof(int));
+
+    for (int i = 0; i < *n; i++)
+    {
+        if ((*matriz)[i][i] != 1)
+        {
+            (matrizAux)[i][i] = 1;
+            encontrado++;
+        }
+        else if ((*matriz)[i][i] == 1)
+        {
+            (matrizAux)[i][i] = 0;
+       }
+   }
+    if(encontrado == 0)
+        {
+            printf("A matriz ja ereflexiva, portanto nao ha fecho reflexivo a ser aplicado\n");
+            return;
+        }
+    for (int i = 1; i <= *n; i++)
+            {
+                for (int j = 1; j <= *n; j++)
+                    printf("%d ", (matrizAux)[i][j]);
+                printf("\n");
+            }
+            return;
+
+}
