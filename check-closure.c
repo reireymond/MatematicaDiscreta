@@ -17,8 +17,9 @@
 #include <stdio.h>
 #include <string.h>
 
-void lerArquivo(char *nomeArquivo, int ***matriz, int *n)
-{
+
+
+void lerArquivo(char *nomeArquivo, int ***matriz, int *n){
     FILE *f = fopen(nomeArquivo, "r");
     if (!f)
     {
@@ -72,60 +73,8 @@ int verificaTransitiva(int ***matriz, int *n);
 void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida);
 void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida);
 void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida);
-
-int verificaReflexiva(int ***matriz, int *n)
-{
-    for (int i = 1; i < *n; i++)
-    {
-        if ((*matriz)[i][i] != 1)
-        {
-            printf("\nReflexiva:Nao");
-            return 0;
-        }
-    }
-
-    printf("\nReflexiva:Sim");
-    return 1;
-}
-int verificaSimetrica(int ***matriz, int *n)
-{
-    for (int i = 1; i < *n; i++)
-    {
-        for (int j = 1; j <= *n; j++)
-        {
-            if ((*matriz)[i][j] != (*matriz)[j][i])
-            {
-                printf("\nSimetrica:Nao");
-                return 0;
-            }
-        }
-    }
-    printf("\nSimetrica:Sim");
-    return 1;
-}
-int verificaTransitiva(int ***matriz, int *n)
-{
-    for (int i = 1; i < *n; i++)
-    {
-        for (int j = 1; j <= *n; j++)
-        {
-            if ((*matriz)[i][j] == 1)
-            {
-
-                for (int k = 0; k <= *n; k++)
-                {
-                    if ((*matriz)[j][k] == 1 && (*matriz)[i][k] == 0)
-                    {
-                        printf("\nTransitiva:Nao");
-                        return 0;
-                    }
-                }
-            }
-        }
-    }
-    printf("\nTransitiva:Sim");
-    return 1;
-}
+void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida);
+void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida);
 
 int main(int argc, char **argv)
 {
@@ -151,39 +100,220 @@ int main(int argc, char **argv)
     verificaSimetrica(&matriz, &n);
     verificaReflexiva(&matriz, &n);
     verificaTransitiva(&matriz, &n);
+    checkFechoReflexivo(&matriz, &n, StrSaida);
+    checkFechoSimetrico(&matriz, &n, StrSaida);
+    checkFechoTransitivo(&matriz, &n, StrSaida);
 
     exit(0);
 }
-void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida){
-    int encontrado = 0;//contador para verificar se ja e reflexiva
-    int **matrizAux; //matriz auxiliar para o fecho reflexivo
-    *matrizAux = calloc((*n) + 1, sizeof(int *));
-            for (int i = 1; i <= *n; i++)
-                (*matriz)[i] = calloc((*n) + 1, sizeof(int));
 
-    for (int i = 0; i < *n; i++)
+int verificaReflexiva(int ***matriz, int *n)
+{
+    for (int i = 1; i < *n; i++)
     {
         if ((*matriz)[i][i] != 1)
         {
-            (matrizAux)[i][i] = 1;
-            encontrado++;
+            printf("Reflexiva:Nao\n");
+            return 0;
         }
-        else if ((*matriz)[i][i] == 1)
+    }
+
+    printf("Reflexiva:Sim \n");
+    return 1;
+}
+int verificaSimetrica(int ***matriz, int *n)
+{
+    for (int i = 1; i < *n; i++)
+    {
+        for (int j = 1; j <= *n; j++)
         {
-            (matrizAux)[i][i] = 0;
-       }
-   }
-    if(encontrado == 0)
-        {
-            printf("A matriz ja ereflexiva, portanto nao ha fecho reflexivo a ser aplicado\n");
-            return;
+            if ((*matriz)[i][j] != (*matriz)[j][i])
+            {
+                printf("Simetrica:Nao\n");
+                return 0;
+            }
         }
+    }
+    printf("Simetrica:Sim\n");
+    return 1;
+}
+
+int verificaTransitiva(int ***matriz, int *n)
+{
+    for (int i = 1; i < *n; i++)
+    {
+        for (int j = 1; j <= *n; j++)
+        {
+            if ((*matriz)[i][j] == 1)
+            {
+
+                for (int k = 0; k <= *n; k++)
+                {
+                    if ((*matriz)[j][k] == 1 && (*matriz)[i][k] == 0)
+                    {
+                        printf("Transitiva:Nao\n");
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+    printf("Transitiva:Sim\n");
+    return 1;
+}
+
+
+void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida) {
+    int **matrizAux;
+    int encontrou = 0;
+
+    // aloca matriz auxiliar zerada
+    matrizAux = calloc((*n) + 1, sizeof(int *));
     for (int i = 1; i <= *n; i++)
+        matrizAux[i] = calloc((*n) + 1, sizeof(int));
+
+     // copia matriz e aplica fecho reflexivo se necessário
+    for (int i = 1; i <= *n; i++) {
+        for (int j = 1; j <= *n; j++)
+            matrizAux[i][j] = (*matriz)[i][j];
+    }
+
+    for (int i = 1; i < *n; i++) { 
+        if ((*matriz)[i][i] != 1) {
+             (matrizAux)[i][i] = 1; 
+             encontrou++; 
+            } 
+            }
+
+    
+
+    if (!encontrou) {
+        printf("\nA matriz ja e reflexiva. Nenhum fecho reflexivo aplicado.\n");
+        // libera matrizAux pois ela não será usada para gerar arquivo
+        for (int i = 1; i <= *n; i++)
+            free(matrizAux[i]);
+        free(matrizAux);
+        return;
+    }
+    // imprime
+    printf("\nMatriz apos aplicacao do fecho reflexivo:\n");
+            for (int i = 1; i <= *n; i++)
             {
                 for (int j = 1; j <= *n; j++)
                     printf("%d ", (matrizAux)[i][j]);
                 printf("\n");
             }
-            return;
 
+    // libera matrizAux após uso
+    for (int i = 1; i <= *n; i++)
+        free(matrizAux[i]);
+    free(matrizAux);
+}
+
+
+void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida) {
+    int **matrizAux;
+    int encontrou = 0;
+
+    // aloca matriz auxiliar zerada
+    matrizAux = calloc((*n) + 1, sizeof(int *));
+    for (int i = 1; i <= *n; i++)
+        matrizAux[i] = calloc((*n) + 1, sizeof(int));
+
+    // copia matriz e aplica fecho simetrico se necessário
+    for (int i = 1; i <= *n; i++) {
+        for (int j = 1; j <= *n; j++)
+            matrizAux[i][j] = (*matriz)[i][j];
+    }
+
+    for (int i = 1; i < *n; i++) { 
+        for (int j = 1; j <= *n; j++) {
+        if ((*matriz)[i][j] != (*matriz)[j][i])
+            {
+                matrizAux[i][j] = 1;
+                encontrou++;
+            }
+            }
+        }
+
+    if (!encontrou) {
+        printf("\nA matriz ja e simetrica. Nenhum fecho simetrico aplicado.\n");
+        // libera matrizAux pois ela não será usada para gerar arquivo
+        for (int i = 1; i <= *n; i++)
+            free(matrizAux[i]);
+        free(matrizAux);
+        return;
+    }
+
+    // imprime
+     printf("\nMatriz apos aplicacao do fecho simetrico:\n");
+            for (int i = 1; i <= *n; i++)
+            {
+                for (int j = 1; j <= *n; j++)
+                    printf("%d ", (matrizAux)[i][j]);
+                printf("\n");
+            }
+
+    // libera matrizAux após uso
+    for (int i = 1; i <= *n; i++)
+        free(matrizAux[i]);
+    free(matrizAux);
+}
+
+void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida) {
+    int **matrizAux;
+    int encontrou = 0;
+
+    // aloca matriz auxiliar zerada
+    matrizAux = calloc((*n) + 1, sizeof(int *));
+    for (int i = 1; i <= *n; i++)
+        matrizAux[i] = calloc((*n) + 1, sizeof(int));
+
+    // copia matriz e aplica fecho simetrico se necessário
+    for (int i = 1; i <= *n; i++) {
+        for (int j = 1; j <= *n; j++)
+            matrizAux[i][j] = (*matriz)[i][j];
+    }
+
+    for (int i = 1; i < *n; i++)
+    {
+        for (int j = 1; j <= *n; j++)
+        {
+            if ((*matriz)[i][j] == 1)
+            {
+
+                for (int k = 0; k <= *n; k++)
+                {
+                    if ((*matriz)[j][k] == 1 && (*matriz)[i][k] == 0)
+                    {
+                        matrizAux[i][k] = 1;
+                        encontrou++;
+                    }
+                }
+            }
+        }
+    }
+
+    if (!encontrou) {
+        printf("\nA matriz ja e transitiva. Nenhum fecho transitivo aplicado.\n");
+        // libera matrizAux pois ela não será usada para gerar arquivo
+        for (int i = 1; i <= *n; i++)
+            free(matrizAux[i]);
+        free(matrizAux);
+        return;
+    }
+
+    // imprime
+     printf("\nMatriz apos aplicacao do fecho transitivo:\n");
+            for (int i = 1; i <= *n; i++)
+            {
+                for (int j = 1; j <= *n; j++)
+                    printf("%d ", (matrizAux)[i][j]);
+                printf("\n");
+            }
+
+    // libera matrizAux após uso
+    for (int i = 1; i <= *n; i++)
+        free(matrizAux[i]);
+    free(matrizAux);
 }
