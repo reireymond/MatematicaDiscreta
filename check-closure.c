@@ -17,9 +17,8 @@
 #include <stdio.h>
 #include <string.h>
 
-
-
-void lerArquivo(char *nomeArquivo, int ***matriz, int *n){
+void lerArquivo(char *nomeArquivo, int ***matriz, int *n)
+{
     FILE *f = fopen(nomeArquivo, "r");
     if (!f)
     {
@@ -67,6 +66,62 @@ void lerArquivo(char *nomeArquivo, int ***matriz, int *n){
     fclose(f);
 }
 
+void gerarArquivo(char *nomeArquivo, int ***matrizOriginal, int ***matrizFechos, int *n, int tipo)
+{
+    char aux[200];
+    if (tipo == 1) // Se os fechos forem de uma matriz não reflexiva
+    {
+        sprintf(aux, "%s-ref.dot", nomeArquivo);
+    }
+    else if (tipo == 2) // Se os fechos forem de uma matriz não simétrica
+    {
+        sprintf(aux, "%s-sim.dot", nomeArquivo);
+    }
+    else if (tipo == 3) // Se os fechos forem de uma matriz não transitiva
+    {
+        sprintf(aux, "%s-tra.dot", nomeArquivo);
+    }
+
+    FILE *temp = fopen(aux, "w");
+    if (!temp)
+    {
+        return;
+    }
+
+    fprintf(temp, "digraph {\n");
+
+    // imprime o conjunto primeiro
+    for (int i = 1; i <= *n; i++)
+    {
+        fprintf(temp, "%d;\n", i);
+    }
+
+    for (int i = 1; i <= *n; i++)
+    {
+        for (int j = 1; j <= *n; j++)
+        {
+            if ((*matrizOriginal)[i][j] == 1)
+            {
+                fprintf(temp, "%d -> %d;\n", i, j);
+            }
+        }
+    }
+
+    for (int i = 1; i <= *n; i++)
+    {
+        for (int j = 1; j <= *n; j++)
+        {
+            if ((*matrizFechos)[i][j] == 1)
+            {
+                fprintf(temp, "%d -> %d [color=red];\n", i, j);
+            }
+        }
+    }
+
+    fprintf(temp, "}");
+    fclose(temp);
+}
+
 int verificaReflexiva(int ***matriz, int *n);
 int verificaSimetrica(int ***matriz, int *n);
 int verificaTransitiva(int ***matriz, int *n);
@@ -92,6 +147,18 @@ int main(int argc, char **argv)
     // Obtem os parametros argv para receber o nome dos arquivos
     StrEntrada = argv[1];
     StrSaida = argv[2];
+
+    char nomeSaida[200];
+    strcpy(nomeSaida, argv[2]);
+
+    // Remove ".txt" se existir no final
+    char *p = strstr(nomeSaida, ".txt");
+    if (p && p == nomeSaida + strlen(nomeSaida) - 4)
+    {
+        *p = '\0'; // Corta a string
+    }
+
+    StrSaida = nomeSaida;
 
     int **matriz;
     int n = 1;
@@ -121,6 +188,7 @@ int verificaReflexiva(int ***matriz, int *n)
     printf("Reflexiva:Sim \n");
     return 1;
 }
+
 int verificaSimetrica(int ***matriz, int *n)
 {
     for (int i = 1; i < *n; i++)
@@ -146,7 +214,6 @@ int verificaTransitiva(int ***matriz, int *n)
         {
             if ((*matriz)[i][j] == 1)
             {
-
                 for (int k = 0; k <= *n; k++)
                 {
                     if ((*matriz)[j][k] == 1 && (*matriz)[i][k] == 0)
@@ -162,8 +229,8 @@ int verificaTransitiva(int ***matriz, int *n)
     return 1;
 }
 
-
-void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida) {
+void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida)
+{
     int **matrizAux;
     int encontrou = 0;
 
@@ -172,22 +239,18 @@ void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida) {
     for (int i = 1; i <= *n; i++)
         matrizAux[i] = calloc((*n) + 1, sizeof(int));
 
-     // copia matriz e aplica fecho reflexivo se necessário
-    for (int i = 1; i <= *n; i++) {
-        for (int j = 1; j <= *n; j++)
-            matrizAux[i][j] = (*matriz)[i][j];
+    // acha os fechos necessários da matriz e insere na matrizAux
+    for (int i = 1; i < *n; i++)
+    {
+        if ((*matriz)[i][i] != 1)
+        {
+            (matrizAux)[i][i] = 1;
+            encontrou++;
+        }
     }
 
-    for (int i = 1; i < *n; i++) { 
-        if ((*matriz)[i][i] != 1) {
-             (matrizAux)[i][i] = 1; 
-             encontrou++; 
-            } 
-            }
-
-    
-
-    if (!encontrou) {
+    if (!encontrou)
+    {
         printf("\nA matriz ja e reflexiva. Nenhum fecho reflexivo aplicado.\n");
         // libera matrizAux pois ela não será usada para gerar arquivo
         for (int i = 1; i <= *n; i++)
@@ -195,14 +258,9 @@ void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida) {
         free(matrizAux);
         return;
     }
-    // imprime
-    printf("\nMatriz apos aplicacao do fecho reflexivo:\n");
-            for (int i = 1; i <= *n; i++)
-            {
-                for (int j = 1; j <= *n; j++)
-                    printf("%d ", (matrizAux)[i][j]);
-                printf("\n");
-            }
+
+    // Gera o arquivo com os fechos reflexivos
+    gerarArquivo(nomeSaida, matriz, &matrizAux, n, 1);
 
     // libera matrizAux após uso
     for (int i = 1; i <= *n; i++)
@@ -210,8 +268,8 @@ void checkFechoReflexivo(int ***matriz, int *n, char *nomeSaida) {
     free(matrizAux);
 }
 
-
-void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida) {
+void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida)
+{
     int **matrizAux;
     int encontrou = 0;
 
@@ -220,23 +278,21 @@ void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida) {
     for (int i = 1; i <= *n; i++)
         matrizAux[i] = calloc((*n) + 1, sizeof(int));
 
-    // copia matriz e aplica fecho simetrico se necessário
-    for (int i = 1; i <= *n; i++) {
+    // acha os fechos necessários da matriz e insere na matrizAux
+    for (int i = 1; i < *n; i++)
+    {
         for (int j = 1; j <= *n; j++)
-            matrizAux[i][j] = (*matriz)[i][j];
-    }
-
-    for (int i = 1; i < *n; i++) { 
-        for (int j = 1; j <= *n; j++) {
-        if ((*matriz)[i][j] != (*matriz)[j][i])
+        {
+            if ((*matriz)[i][j] != (*matriz)[j][i])
             {
                 matrizAux[i][j] = 1;
                 encontrou++;
             }
-            }
         }
+    }
 
-    if (!encontrou) {
+    if (!encontrou)
+    {
         printf("\nA matriz ja e simetrica. Nenhum fecho simetrico aplicado.\n");
         // libera matrizAux pois ela não será usada para gerar arquivo
         for (int i = 1; i <= *n; i++)
@@ -245,14 +301,8 @@ void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida) {
         return;
     }
 
-    // imprime
-     printf("\nMatriz apos aplicacao do fecho simetrico:\n");
-            for (int i = 1; i <= *n; i++)
-            {
-                for (int j = 1; j <= *n; j++)
-                    printf("%d ", (matrizAux)[i][j]);
-                printf("\n");
-            }
+    // Gera o arquivo com os fechos simétricos
+    gerarArquivo(nomeSaida, matriz, &matrizAux, n, 2);
 
     // libera matrizAux após uso
     for (int i = 1; i <= *n; i++)
@@ -260,7 +310,8 @@ void checkFechoSimetrico(int ***matriz, int *n, char *nomeSaida) {
     free(matrizAux);
 }
 
-void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida) {
+void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida)
+{
     int **matrizAux;
     int encontrou = 0;
 
@@ -269,12 +320,7 @@ void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida) {
     for (int i = 1; i <= *n; i++)
         matrizAux[i] = calloc((*n) + 1, sizeof(int));
 
-    // copia matriz e aplica fecho simetrico se necessário
-    for (int i = 1; i <= *n; i++) {
-        for (int j = 1; j <= *n; j++)
-            matrizAux[i][j] = (*matriz)[i][j];
-    }
-
+    // acha os fechos necessários da matriz e insere na matrizAux
     for (int i = 1; i < *n; i++)
     {
         for (int j = 1; j <= *n; j++)
@@ -294,7 +340,8 @@ void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida) {
         }
     }
 
-    if (!encontrou) {
+    if (!encontrou)
+    {
         printf("\nA matriz ja e transitiva. Nenhum fecho transitivo aplicado.\n");
         // libera matrizAux pois ela não será usada para gerar arquivo
         for (int i = 1; i <= *n; i++)
@@ -303,14 +350,8 @@ void checkFechoTransitivo(int ***matriz, int *n, char *nomeSaida) {
         return;
     }
 
-    // imprime
-     printf("\nMatriz apos aplicacao do fecho transitivo:\n");
-            for (int i = 1; i <= *n; i++)
-            {
-                for (int j = 1; j <= *n; j++)
-                    printf("%d ", (matrizAux)[i][j]);
-                printf("\n");
-            }
+    // Gera o arquivo com os fechos transitivos
+    gerarArquivo(nomeSaida, matriz, &matrizAux, n, 3);
 
     // libera matrizAux após uso
     for (int i = 1; i <= *n; i++)
